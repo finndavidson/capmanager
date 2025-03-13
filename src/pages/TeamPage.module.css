@@ -1,0 +1,11 @@
+.item{
+    min-width: 15em;
+    color: black;
+    text-align: center;
+}
+
+.table{
+    flex-direction: row;
+    display: flex;
+    list-style: none;
+}

@@ -1,0 +1,9 @@
+.outer_border{
+    display: flex;
+    gap: 2em;
+}
+
+.right{
+    display: flex;
+    flex-direction: column;
+}

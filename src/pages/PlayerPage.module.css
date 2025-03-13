@@ -1,0 +1,40 @@
+.item{
+    min-width: 15em;
+    color: black;
+    text-align: center;
+}
+
+.item_name{
+    min-width: 4em;
+    color: black;
+    text-align: center
+}
+
+.table{
+    flex-direction: row;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    padding: 0%;
+}
+
+.table_vertical{
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    align-items: center;
+}
+
+.image{
+    display: flex;
+}
+
+.holder{
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    width: 100%;
+}
+
+
+

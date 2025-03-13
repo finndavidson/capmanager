@@ -1,0 +1,20 @@
+.table{
+    display: flex;
+    list-style: none;
+}
+
+.item{
+    min-width: 15em;
+}
+
+.table_head{
+    background-color: #0a1ecf;
+    color: white;
+    display: flex;
+    list-style: none;
+}
+
+.item_head{
+    min-width: 15em;
+
+}
