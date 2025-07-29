@@ -1,0 +1,11 @@
+.player_card {
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    width: 70%;
+    border: 1px solid black;
+    border-radius: 25px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}

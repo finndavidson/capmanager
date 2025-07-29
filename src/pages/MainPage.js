@@ -1,16 +1,19 @@
 import styles from "./MainPage.module.css"
-import TeamsData from "../components/TeamsData";
-import PlayerActivity from "../components/PlayerActivity";
-import PlayerContract from "../components/PlayerContract";
+import TeamsData from "../components/team/TeamsData";
+import PlayerActivity from "../components/player/PlayerActivity";
+import PlayerContract from "../components/player/PlayerContract";
+import TradeTable from "../components/trade/TradeTable";
 
 const MainPage =  () =>{
     return(
         <div className={styles.outer_border}>
-            <TeamsData />
-            <div className={styles.right}>
+            <div className={styles.left_container}>
+                <TeamsData />
+            </div>
+            <div className={styles.right_container}>
                 <PlayerActivity />
                 <PlayerContract />
-                <PlayerActivity />
+                <TradeTable />
             </div>
         </div>
     );

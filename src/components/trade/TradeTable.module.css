@@ -1,0 +1,5 @@
+.box{
+    display: flex;
+    padding: 3em;
+    justify-content: center;
+}

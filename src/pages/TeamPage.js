@@ -1,99 +1,144 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import styles from "./TeamPage.module.css";
+import PlayerItemList from "../components/list/PlayerItemList.js";
+import ArrayList from "../components/list/ArrayList.js";
+import ItemList from "../components/list/ItemList.js";
+import PictureArrayList from "../components/list/PictureArrayList.js";
+import styles from "./TeamPage.module.css"
+import { useGlobalContext } from "../GlobalContext";
 
-const TeamPage =  () =>{
-    const[teamContracts, setTeamContracts] = useState([]);
+const TeamPage = () => {
+    const [teamContracts, setTeamContracts] = useState([]);
+    const [deadMoney, setDeadMoney] = useState([]);
+    const [draftPicks, setDraftPicks] = useState([])
+    const [teamInfo, setTeamInfo] = useState([])
+    const [teamName, setTeamName] = useState()
     const params = useParams();
-    const currentYear = 2025;
-    const navigate = useNavigate();
+    const { currentYear, salaryCap } = useGlobalContext();
+    const yearsList = ["Name", currentYear, currentYear + 1, currentYear + 2, currentYear + 3, currentYear + 4, currentYear + 5, currentYear + 6, currentYear + 7]
+    const roundsList = ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6', 'Round 7'];
 
-    const getTeamInfo = async() =>{
-        const response = await axios.get(`http://localhost:8000/teams/team?tri_code="`+ params.teamID+ '"');
+    const getTeamInfo = async (team) => {
+        const response = await axios.get(`http://localhost:8000/api/team/team?teamID= ${team}`);
         const fetchedTeamData = response.data;
         return fetchedTeamData;
-
     }
-    const getPlayerInfo = async(team) =>{
-        const response = await axios.get(`http://localhost:8000/team/players?team=` + team[0].team_id);
+
+    const getPlayerInfo = async (team) => {
+        const response = await axios.get(`http://localhost:8000/api/player/team?team=` + team[0].team_id);
         const fetchedPlayerData = response.data;
         return fetchedPlayerData;
     }
 
-    const getContractInfo = async(players = []) =>{
+    const getContractInfo = async (players = []) => {
         let contractData = [];
-        for(let i = 0; i<players.length; i++){    
-            const response = await axios.get(`http://localhost:8000/contract?player=`+ players[i].player_id);
+        for (let i = 0; i < players.length; i++) {
+            const response = await axios.get(`http://localhost:8000/api/contract/year/after?year=${currentYear}&player=${players[i].player_id}`);
             const fetchedContractData = response.data;
             contractData.push(fetchedContractData);
-        } 
+        }
         return contractData;
-
     }
 
-    useEffect(() =>{
-        getTeamInfo().then((team) => {
+    const getDeadMoney = async (team) => {
+        const deadMoneyList = [];
+        const response = await axios.get(`http://localhost:8000/api/deadmoney/team?team=` + team);
+        const fetchedDeadMoneyData = response.data;
+        for (const contract of fetchedDeadMoneyData) {
+            if (!deadMoneyList[contract.player_id]) {
+                deadMoneyList[contract.player_id] = [];
+                deadMoneyList[contract.player_id].push(`${contract.player_name}`);
+                deadMoneyList[contract.player_id].push(contract.amount);
+                deadMoneyList[contract.player_id].push(null);
+            }
+            else {
+                deadMoneyList[contract.player_id][2] = contract.amount;
+            }
+            console.log(contract);
+        }
+        return deadMoneyList;
+    }
+
+    const getDraftPicks = async (team) => {
+        const response = await axios.get(`http://localhost:8000/api/picks/team/year?team= ${team}&year= ${currentYear}`)
+        const picks = response.data;
+        return picks;
+    }
+
+    function normalizeArraysTo9Values(data) {
+        const normalizedData = {};
+        for (const [key, array] of Object.entries(data)) {
+            const normalizedArray = [...array];
+            while (normalizedArray.length < 9) {
+                normalizedArray.push(null);
+            }
+            normalizedData[key] = normalizedArray;
+        }
+        return normalizedData;
+    }
+
+
+    useEffect(() => {
+        getTeamInfo(params.teamID).then((team) => {
+            setTeamName(team[0].name);
+            setTeamInfo([[`Cap Hit`, `Cap Space`, `Roster`, `Practice Squad`], [`${team[0].cap_hit}`, `${salaryCap - team[0].cap_hit}`, `${team[0].roster_size}/53`, `${team[0].practice_squad}`]]);
             getPlayerInfo(team).then((players) => {
-                getContractInfo(players).then((contracts) =>{
-                    let teamPlayerData = [];
-                    contracts.flat().forEach((contract) =>{
-                        let caphit = contract.cap_hit;
-                        let year = contract.year;
-                        let playerInfo = players.findIndex(player => player.player_id === contract.player_id);
-                        let playerContractData = []
-                        if(playerInfo != -1){
-                            playerContractData.push(players[playerInfo].player_id);
-                            playerContractData.push(players[playerInfo].first_name);
-                            playerContractData.push(players[playerInfo].last_name);
-                            playerContractData.push(players[playerInfo].status);
-                            playerContractData.push(caphit);
-                            playerContractData.push(year);
-                            const playerExists = teamPlayerData.findIndex(player => player[0][0] === players[playerInfo].player_id);
-                            if(playerExists !== -1){
-                                teamPlayerData[playerExists] = [...teamPlayerData[playerExists], playerContractData];
-                            }else{
-                                teamPlayerData.push([playerContractData]);
-                            }                            
+                getContractInfo(players).then((contracts) => {
+                    let teamPlayerData = [yearsList];
+                    contracts.flat().forEach((contract) => {
+                        if (!teamPlayerData[contract.player_id]) {
+                            teamPlayerData[contract.player_id] = [];
+                            let playerIndex = players.findIndex(player => player.player_id === contract.player_id);
+                            teamPlayerData[contract.player_id].push(`${players[playerIndex].first_name}  ${players[playerIndex].last_name}`)
                         }
+                        teamPlayerData[contract.player_id].push(contract.cap_hit.toLocaleString());
                     })
+                    teamPlayerData = normalizeArraysTo9Values(teamPlayerData);
                     setTeamContracts(teamPlayerData);
                 })
             });
-        })
-    }, [])
-    return(
-        <div>
-            <ul className={styles.table}>
-                <li className={styles.item}>Name</li>
-                <li className={styles.item}></li>
-                <li className={styles.item}>{currentYear}</li>
-                <li className={styles.item}>{currentYear+1}</li>
-                <li className={styles.item}>{currentYear+2}</li>
-                <li className={styles.item}>{currentYear+3}</li>
-                <li className={styles.item}>{currentYear+4}</li>
-                <li className={styles.item}>{currentYear+5}</li>
-                <li className={styles.item}>{currentYear+6}</li>
-            </ul>
-            {
-            teamContracts && teamContracts.map((player) => {
-                console.log(player[0][0]);
-                    return <div className={styles.table}>
-                        <ul className={styles.table}>
-                            <li className={styles.item} onClick={() => navigate(`/player/${player[0][0]}`)}>{player[0][1]}</li>
-                            <li className={styles.item}>{player[0][2]}</li>
-                        </ul>                     
-                     {
-                        player.map((contract) => {
-                             return <ul className={styles.table}>
-                                <li className={styles.item}>{contract[4]}</li>
-                            </ul>
-                    })}
-                </div>        
+            getDeadMoney(team[0].team_id).then((deadMoneyInfo) => {
+                setDeadMoney(deadMoneyInfo);
             })
-            }
+            getDraftPicks(team[0].team_id).then((picks) => {
+                let teamImage = `/images/teams/${team[0].tri_code.toLowerCase()}.png`;
+                const picksArray = [[], [], [], [], [], [], [], []];
+                picks.forEach((pick) => {
+                    if (pick.team_id === team[0].team_id) {
+                        picksArray[pick.round_id] = [...picksArray[pick.round_id], teamImage];
+                    }
+                    else {
+                        getTeamInfo(pick.team_id).then((team) => {
+                            picksArray[pick.round_id] = [...picksArray[pick.round_id], `/images/teams/${team[0].tri_code.toLowerCase()}.png`];
+                        })
+                    }
+                })
+                picksArray.shift()
+                setDraftPicks(picksArray);
+            });
+        });
+    }, [])
+
+    return (
+        <div>
+            <div className={styles.header}>
+                <h1>{teamName}</h1>
+                {teamInfo && <ArrayList data={teamInfo[0]} />}
+                {teamInfo && <ArrayList data={teamInfo[1]} />}
+            </div>
+            <h2>Picks</h2>
+            <PictureArrayList data={draftPicks} header={roundsList} />
+            <div className={styles.outerbox}>
+                <h2>Roster</h2>
+                {teamContracts && <PlayerItemList data={teamContracts} />}
+            </div>
+            <div className={styles.outerbox}>
+                <h2>Buyouts</h2>
+                {deadMoney && <ItemList data={deadMoney} />}
+            </div>
         </div>
     );
-}   
+}
 
 export default TeamPage;

@@ -1,9 +1,19 @@
 .outer_border{
     display: flex;
-    gap: 2em;
+    max-width: 100%;
 }
-
-.right{
+.left_container{
+    padding-left: 30px;
+    padding-top: 48px;
     display: flex;
     flex-direction: column;
+    width: 70%;
+}
+
+.right_container{
+    display: flex;
+    margin-left: auto;
+    flex-direction: column;
+    align-content: center;
+    width: 30%;
 }

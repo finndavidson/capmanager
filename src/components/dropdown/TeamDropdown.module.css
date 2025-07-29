@@ -1,0 +1,67 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 5%;
+}
+
+.dropdown:hover .dropdown_content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.dropdown:hover #item {
+    box-shadow: 0px 10px 100px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown_content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 600px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1;
+}
+
+.dropdown_content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dropdown_content li {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown_content img {
+    width: 20px;
+    margin-right: 8px;
+}
+
+#item {
+    text-decoration: none;
+    margin-left: 5%;
+    color: black;
+    font-size: 1.5em;
+    padding: 10px
+}
+
+.division_group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.division_name {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.team_list {
+    list-style: none;
+    padding-left: 1rem;
+}

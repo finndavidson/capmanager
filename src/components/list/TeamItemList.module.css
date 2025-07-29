@@ -1,0 +1,46 @@
+.dafaultItem {
+    display: flex;
+    flex: 1 1 0%;
+    color: black;
+    justify-content: center;
+    padding: 10px;
+}
+
+.dafaultTable {
+    flex-direction: row;
+    display: flex;
+    list-style: none;
+    margin: 0px;
+}
+
+.dafaultTable:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.defaultImage {
+    max-width: 3%;
+    max-height: 10%;
+    min-width: 46px;
+    min-height: 46px;
+}
+
+.header {
+    flex-direction: row;
+    display: flex;
+    list-style: none;
+    margin: 0px;
+    background-color: #282b3a;
+    color: #f2f2f2;
+}
+
+.headerItem {
+    display: flex;
+    flex: 1 1 0%;
+    color: white;
+    justify-content: center;
+    padding: 10px
+}
+
+.transparentImage {
+    opacity: 0%;
+}

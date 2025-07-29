@@ -1,0 +1,73 @@
+.player_card {
+    grid-template-rows: 1fr 1fr;
+    width: 50%;
+    border: 1px solid black;
+    border-radius: 25px;
+    padding: 20px;
+    display: grid;
+    gap: 20px;
+    background-color: white;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+
+.player_image {
+    width: 126px;
+    height: 126px;
+}
+
+.player_image img {
+    width: 126px;
+    height: 126px;
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header .number {
+    color: gray;
+    font-size: 18px;
+}
+
+.position {
+    color: #6495ED;
+    font-size: 14px;
+    margin: 2px 0;
+}
+
+.team {
+    font-size: 16px;
+    color: #333;
+    margin: 2px;
+}
+
+.grid_bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 10px;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.grid_top {
+    display: grid;
+    grid-template-columns: 175px 1fr;
+    margin-top: 10px;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.grid_bottom p {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    color: #888;
+    margin-right: 4px;
+    font-weight: 500;
+}

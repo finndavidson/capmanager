@@ -1,11 +1,12 @@
-.item{
-    min-width: 15em;
-    color: black;
-    text-align: center;
+.header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.table{
-    flex-direction: row;
+.outerbox {
     display: flex;
-    list-style: none;
+    flex-direction: column;
+    text-align: center;
 }
