@@ -11,6 +11,7 @@
     display: flex;
     list-style: none;
     margin: 0px;
+    padding-inline-start: 0px;
 }
 
 .defaultTable:nth-child(even) {
@@ -46,6 +47,16 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     gap: 10px;
+    border-bottom: 2px solid #000;
+}
+
+.trade_box {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    border-bottom: #282b3a;
+    border-radius: 1em;
+    padding: 5px;
+
 }
 
 h1 {
@@ -57,12 +68,13 @@ h1 {
     color: #FFFFFF;
 }
 
-.teamimg{
+.teamimg {
     padding: 1em;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    width: 3%;
-    height: 3%; 
+    width: 80%;
+    height: 80%;
+    padding: 0%;
 }

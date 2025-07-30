@@ -10,3 +10,20 @@
     flex-direction: column;
     text-align: center;
 }
+
+.table {
+    display: grid;
+    list-style: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    width: 100%;
+    min-height: 20px;
+    height: 40px;
+    padding-inline-start: 0px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

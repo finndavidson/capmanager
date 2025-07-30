@@ -17,7 +17,8 @@ const GlobalProvider = ({ children }) => {
         <GlobalContext.Provider value={{
             currentYear,
             teams,
-            teamsTri
+            teamsTri,
+            salaryCap
         }}>
             {children}
         </GlobalContext.Provider>

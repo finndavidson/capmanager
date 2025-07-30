@@ -1,9 +1,10 @@
-import styles from './ItemList.module.css'; 
+import styles from './ArrayList.module.css'; 
 
 const ArrayList = ({data, classNameTable, classNameItem}) => {
     if(!data){
         data=[]
     }
+    
     return (
         <div>
             <ul className={classNameTable ? classNameTable : styles.defaultTable}>

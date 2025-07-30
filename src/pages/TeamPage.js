@@ -9,28 +9,37 @@ import styles from "./TeamPage.module.css"
 import { useGlobalContext } from "../GlobalContext";
 
 const TeamPage = () => {
+
+    
     const [teamContracts, setTeamContracts] = useState([]);
     const [deadMoney, setDeadMoney] = useState([]);
     const [draftPicks, setDraftPicks] = useState([])
     const [teamInfo, setTeamInfo] = useState([])
     const [teamName, setTeamName] = useState()
+
     const params = useParams();
+
     const { currentYear, salaryCap } = useGlobalContext();
+
+    
     const yearsList = ["Name", currentYear, currentYear + 1, currentYear + 2, currentYear + 3, currentYear + 4, currentYear + 5, currentYear + 6, currentYear + 7]
     const roundsList = ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6', 'Round 7'];
 
+    //get a teams information based on a given id
     const getTeamInfo = async (team) => {
         const response = await axios.get(`http://localhost:8000/api/team/team?teamID= ${team}`);
         const fetchedTeamData = response.data;
         return fetchedTeamData;
     }
 
+    //get players information for a given team
     const getPlayerInfo = async (team) => {
         const response = await axios.get(`http://localhost:8000/api/player/team?team=` + team[0].team_id);
         const fetchedPlayerData = response.data;
         return fetchedPlayerData;
     }
 
+    //get current year contract information for a given player 
     const getContractInfo = async (players = []) => {
         let contractData = [];
         for (let i = 0; i < players.length; i++) {
@@ -41,6 +50,7 @@ const TeamPage = () => {
         return contractData;
     }
 
+    //get all dead money information associated with a given team
     const getDeadMoney = async (team) => {
         const deadMoneyList = [];
         const response = await axios.get(`http://localhost:8000/api/deadmoney/team?team=` + team);
@@ -60,12 +70,14 @@ const TeamPage = () => {
         return deadMoneyList;
     }
 
+    //get the draft picks controlled by given team for the current year
     const getDraftPicks = async (team) => {
         const response = await axios.get(`http://localhost:8000/api/picks/team/year?team= ${team}&year= ${currentYear}`)
         const picks = response.data;
         return picks;
     }
 
+    //take a double array of data and add values so that all 1d arrays have a length of at least 9
     function normalizeArraysTo9Values(data) {
         const normalizedData = {};
         for (const [key, array] of Object.entries(data)) {
@@ -81,8 +93,11 @@ const TeamPage = () => {
 
     useEffect(() => {
         getTeamInfo(params.teamID).then((team) => {
+            const capSpace = salaryCap[0] - team[0].cap_hit
             setTeamName(team[0].name);
-            setTeamInfo([[`Cap Hit`, `Cap Space`, `Roster`, `Practice Squad`], [`${team[0].cap_hit}`, `${salaryCap - team[0].cap_hit}`, `${team[0].roster_size}/53`, `${team[0].practice_squad}`]]);
+            setTeamInfo([[`Cap Hit`, `Cap Space`, `Roster`, `Practice Squad`], [`${team[0].cap_hit.toLocaleString()}`, `${capSpace.toLocaleString()}`, `${team[0].roster_size}/53`, `${team[0].practice_squad}`]]);
+
+            //Collecting all team data for a given team to display all player data data associated with the team
             getPlayerInfo(team).then((players) => {
                 getContractInfo(players).then((contracts) => {
                     let teamPlayerData = [yearsList];
@@ -98,9 +113,13 @@ const TeamPage = () => {
                     setTeamContracts(teamPlayerData);
                 })
             });
+
+            //getting dead money information for the team
             getDeadMoney(team[0].team_id).then((deadMoneyInfo) => {
                 setDeadMoney(deadMoneyInfo);
             })
+
+            //getting draft pick information for the team
             getDraftPicks(team[0].team_id).then((picks) => {
                 let teamImage = `/images/teams/${team[0].tri_code.toLowerCase()}.png`;
                 const picksArray = [[], [], [], [], [], [], [], []];
@@ -124,8 +143,8 @@ const TeamPage = () => {
         <div>
             <div className={styles.header}>
                 <h1>{teamName}</h1>
-                {teamInfo && <ArrayList data={teamInfo[0]} />}
-                {teamInfo && <ArrayList data={teamInfo[1]} />}
+                {teamInfo && <ArrayList data={teamInfo[0]} classsNameItem={styles.item} classNameTable={styles.table}/>}
+                {teamInfo && <ArrayList data={teamInfo[1]} classsNameItem={styles.item} classNameTable={styles.table}/>}
             </div>
             <h2>Picks</h2>
             <PictureArrayList data={draftPicks} header={roundsList} />

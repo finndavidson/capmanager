@@ -11,16 +11,14 @@ const TradeList = ({ data }) => {
             {Array.from(data).map(([tradeId, trade]) => (
                 <div className={styles.box} key={tradeId}>
                     {Array.from(trade).map(([team, assets], teamIndex) => (
-                        <div key={`${tradeId}-${teamIndex}`}>
-                            <img className={styles.teamimg} src={`./images/teams/${teamsTri[team]}.png`}/>
-                            <h3>{teams[team]}</h3>
-                            <div >
+                        <div  key={`${tradeId}-${teamIndex}`}>
+                            <div>
                                 {assets.map((asset, assetIndex) => (
                                     <div 
-                                        className={styles.defaultItem} 
+                                        className={styles.trade_box} 
                                         key={`${tradeId}-${team}-${assetIndex}`}
                                     >
-                                        {asset[0]}
+                                        <img className={styles.teamimg} src={`./images/teams/${teamsTri[team]}.png`}/>{asset[0]}
                                     </div>
                                 ))}
                             </div>
